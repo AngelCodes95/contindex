@@ -108,7 +108,7 @@ func runUpdate(cmd *cobra.Command, args []string) error {
 	}
 
 	// Update template with chapter filenames (already semantic from AI)
-	if err := UpdateTemplateWithChapters(indexFile, chapterFiles); err != nil {
+	if err := UpdateTemplateWithChapters(indexFile, chapterFiles, projectConfig.ContextDir); err != nil {
 		return fmt.Errorf("failed to update template with chapters: %w", err)
 	}
 
@@ -179,4 +179,3 @@ func scanContextDirectory(contextDir string) ([]*classifier.ContextFile, error) 
 
 	return contextFiles, nil
 }
-

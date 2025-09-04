@@ -33,14 +33,20 @@ var (
 	sourceFile   string
 	templateType string
 	backupDir    string
+	contextDir   string
 	projectName  string
+	noBackup     bool
+	force        bool
 )
 
 func init() {
 	convertCmd.Flags().StringVar(&sourceFile, "source", "CLAUDE.md", "Source monolithic context file")
-	convertCmd.Flags().StringVar(&templateType, "template", "claude", "Template type (claude, cursor, copilot, generic)")
-	convertCmd.Flags().StringVar(&backupDir, "backup", "backup", "Backup directory for original file")
+	convertCmd.Flags().StringVar(&templateType, "template", "claude", "Template type (claude, cursor, copilot, gemini, generic)")
+	convertCmd.Flags().StringVar(&backupDir, "backup-dir", "backup", "Backup directory for original file")
+	convertCmd.Flags().StringVar(&contextDir, "context-dir", "context", "Context directory name for chapter files")
 	convertCmd.Flags().StringVar(&projectName, "project", "Project", "Project name for index generation")
+	convertCmd.Flags().BoolVar(&noBackup, "no-backup", false, "Skip creating backup of original file")
+	convertCmd.Flags().BoolVar(&force, "force", false, "Overwrite existing context directory if it contains files")
 	convertCmd.Flags().BoolP("dry-run", "d", false, "Preview changes without writing files")
 	rootCmd.AddCommand(convertCmd)
 }
@@ -61,7 +67,7 @@ func runConvert(cmd *cobra.Command, args []string) error {
 
 	printConversionStatus(dryRun)
 
-	if !dryRun {
+	if !dryRun && !noBackup {
 		if err := createBackup(); err != nil {
 			return fmt.Errorf("failed to create backup: %w", err)
 		}
@@ -97,8 +103,47 @@ func validateConvertInputs() error {
 		return fmt.Errorf("unsupported template type: %w", err)
 	}
 
-	if err := validation.ValidateDirectoryPath(backupDir); err != nil {
-		return fmt.Errorf("invalid backup directory: %w", err)
+	// Only validate backup directory if backups are enabled
+	if !noBackup {
+		if err := validation.ValidateDirectoryPath(backupDir); err != nil {
+			return fmt.Errorf("invalid backup directory: %w", err)
+		}
+	}
+
+	if err := validation.ValidateDirectoryPath(contextDir); err != nil {
+		return fmt.Errorf("invalid context directory: %w", err)
+	}
+
+	// Check for context directory conflicts
+	if err := checkDirectoryConflicts(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func checkDirectoryConflicts() error {
+	// Check if context directory already exists and has files
+	if stat, err := os.Stat(contextDir); err == nil && stat.IsDir() {
+		files, err := os.ReadDir(contextDir)
+		if err != nil {
+			return fmt.Errorf("failed to read context directory: %w", err)
+		}
+
+		if len(files) > 0 && !force {
+			return fmt.Errorf("context directory '%s' already exists and contains %d files - use --context-dir to specify a different name or --force to overwrite", contextDir, len(files))
+		}
+
+		if len(files) > 0 && force {
+			fmt.Printf("Warning: Overwriting existing files in %s/ directory (--force enabled)\n", contextDir)
+		}
+	}
+
+	// Check if backup directory conflicts (when backups enabled)
+	if !noBackup {
+		if contextDir == backupDir {
+			return fmt.Errorf("context directory and backup directory cannot be the same ('%s')", contextDir)
+		}
 	}
 
 	return nil
@@ -150,7 +195,6 @@ func previewConversion(contextFiles []*classifier.ContextFile) error {
 }
 
 func executeConversion(contextFiles []*classifier.ContextFile) error {
-	contextDir := "context"
 	if err := os.MkdirAll(contextDir, 0755); err != nil {
 		return fmt.Errorf("failed to create context directory: %w", err)
 	}
@@ -182,8 +226,9 @@ func writeContextFiles(contextFiles []*classifier.ContextFile, contextDir string
 }
 
 func generateIndexFile(contextFiles []*classifier.ContextFile) error {
-	// Use template system to create index file  
+	// Use template system to create index file
 	projectConfig := config.DefaultConfig(".")
+	projectConfig.ContextDir = contextDir // Use configurable context directory
 	if err := projectConfig.UpdateForTemplate(templateType); err != nil {
 		return fmt.Errorf("failed to configure template: %w", err)
 	}
@@ -195,7 +240,7 @@ func generateIndexFile(contextFiles []*classifier.ContextFile) error {
 	}
 
 	// Update template with AI-generated chapter information
-	return UpdateTemplateWithChapters(projectConfig.MainFile, contextFiles)
+	return UpdateTemplateWithChapters(projectConfig.MainFile, contextFiles, contextDir)
 }
 
 func createBackup() error {
@@ -237,14 +282,18 @@ func printConversionSuccess(contextFiles []*classifier.ContextFile) {
 	}
 
 	fmt.Printf("\nSuccessfully converted %s to index-chapter architecture\n", sourceFile)
-	fmt.Printf("Created %d chapter files in context/ directory\n", len(contextFiles))
+	fmt.Printf("Created %d chapter files in %s/ directory\n", len(contextFiles), contextDir)
 	fmt.Printf("Total content: %d words, ~%d tokens\n", totalWords, totalTokens)
 	fmt.Printf("Average per chapter: %d tokens\n", totalTokens/len(contextFiles))
 	fmt.Printf("Index file: %s\n", getIndexFileName(templateType))
-	fmt.Printf("Backup saved in: %s/\n", backupDir)
+	if !noBackup {
+		fmt.Printf("Backup saved in: %s/\n", backupDir)
+	} else {
+		fmt.Printf("Backup: skipped (--no-backup)\n")
+	}
 
 	fmt.Printf("\nNext steps:\n")
-	fmt.Printf("1. Review generated chapter files in context/ directory\n")
+	fmt.Printf("1. Review generated chapter files in %s/ directory\n", contextDir)
 	fmt.Printf("2. Check the index file - it references all chapters\n")
 	fmt.Printf("3. AI tools can now load specific chapters instead of everything\n")
 }
@@ -265,7 +314,7 @@ func getIndexFileName(templateType string) string {
 }
 
 // UpdateTemplateWithChapters updates the template file with AI-generated chapter names
-func UpdateTemplateWithChapters(mainFile string, contextFiles []*classifier.ContextFile) error {
+func UpdateTemplateWithChapters(mainFile string, contextFiles []*classifier.ContextFile, contextDirName string) error {
 	// Read the current template file
 	content, err := os.ReadFile(mainFile)
 	if err != nil {
@@ -277,7 +326,7 @@ func UpdateTemplateWithChapters(mainFile string, contextFiles []*classifier.Cont
 	for i, file := range contextFiles {
 		// Use the AI-generated descriptive filename as the TOC entry
 		descriptiveName := strings.TrimSuffix(file.FileName, ".md")
-		chapterList.WriteString(fmt.Sprintf("%d. **%s** - `context/%s`\n", i+1, descriptiveName, file.FileName))
+		chapterList.WriteString(fmt.Sprintf("%d. **%s** - `%s/%s`\n", i+1, descriptiveName, contextDirName, file.FileName))
 	}
 
 	// Replace placeholder with actual chapter list
@@ -285,7 +334,7 @@ func UpdateTemplateWithChapters(mainFile string, contextFiles []*classifier.Cont
 		"(Chapter files will be listed here when you run `contindex update` or `contindex convert`)",
 		"(Context files will be listed here when you run `contindex update` or `contindex convert`)",
 	}
-	
+
 	updatedContent := string(content)
 	for _, placeholder := range placeholders {
 		updatedContent = strings.ReplaceAll(updatedContent, placeholder, strings.TrimSpace(chapterList.String()))

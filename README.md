@@ -49,6 +49,15 @@ contindex convert --source=CLAUDE.md
 
 # Preview what would be created
 contindex convert --source=CLAUDE.md --dry-run
+
+# Customize directories to avoid conflicts
+contindex convert --source=CLAUDE.md --context-dir=docs-context --backup-dir=backups
+
+# Skip backup creation (not recommended)
+contindex convert --source=CLAUDE.md --no-backup
+
+# Overwrite existing context directory
+contindex convert --source=CLAUDE.md --force
 ```
 
 **After adding/removing chapters:**
@@ -116,6 +125,73 @@ Independent studies demonstrate measurable efficiency improvements:
 3. **Selective Loading**: AI tools can read index and load only relevant chapters
 4. **Maintenance**: Update index when chapters are added, removed, or modified
 
+## Directory Customization
+
+Contindex provides flexible directory options to avoid conflicts with existing project structure. **Both directory names are fully customizable** - you can use any valid directory name you prefer.
+
+### Default Structure
+```
+your-project/
+├── context/                    # Chapter files (default)
+├── backup/                     # Original file backup (default)
+└── [AGENT].md                  # Index file (varies by template)
+```
+
+### Custom Directories
+```bash
+# Avoid conflicts with existing directories
+contindex convert --source=my-context.md --context-dir=docs-context --backup-dir=backups
+
+# Results in:
+your-project/
+├── docs-context/              # Custom context directory (--context-dir)
+├── backups/                   # Custom backup directory (--backup-dir)
+│   └── my-context.md          # Original source file backed up
+└── CLAUDE.md                  # Index file (using claude template)
+```
+
+### Options for Different Scenarios
+
+**Existing `context/` directory:**
+```bash
+# Option 1: Use different name
+contindex convert --context-dir=project-context
+
+# Option 2: Keep simple names, different location
+contindex convert --context-dir=chapters
+
+# Option 3: Overwrite existing (careful!)
+contindex convert --force
+```
+
+**No backup needed:**
+```bash
+# Skip backup creation entirely
+contindex convert --no-backup
+```
+
+**Simple directory names:**
+```bash
+# Use simple, short names
+contindex convert --context-dir=docs --backup-dir=old
+
+# Or even shorter
+contindex convert --context-dir=ctx --backup-dir=bak
+```
+
+**Frontend projects with conflicts:**
+```bash
+# Avoid common frontend directory names
+contindex convert --context-dir=ai-context --backup-dir=.backups
+```
+
+### Conflict Detection
+
+Contindex automatically detects directory conflicts and provides helpful suggestions:
+- If `context/` exists with files, suggests `--context-dir` or `--force`
+- Prevents same name for context and backup directories
+- Shows clear error messages with solution options
+
 ## Commands
 
 ### For Fresh Projects
@@ -135,12 +211,20 @@ contindex convert --source=CLAUDE.md --project="My Project"
 
 # Preview conversion without changes
 contindex convert --source=CLAUDE.md --dry-run
+
+# Customize directories to avoid conflicts  
+contindex convert --source=CLAUDE.md --context-dir=docs-context --backup-dir=backups
+
+# Advanced options
+contindex convert --source=CLAUDE.md --no-backup --force --template=cursor
 ```
 
 ### Maintaining Your Index
 ```bash
-# Update index when you add/remove chapter files
-contindex update --template=claude
+# Update index when you add/remove chapter files (specify your template)
+contindex update --template=claude    # For CLAUDE.md
+contindex update --template=cursor    # For AGENTS.md
+contindex update --template=gemini    # For GEMINI.md
 
 # Force update even if no changes detected
 contindex update --force
@@ -148,14 +232,43 @@ contindex update --force
 
 ## Project Structure
 
+### Default Structure
 After initialization or conversion:
 ```
 your-project/
-├── context/                    # Chapter files directory
+├── context/                    # Chapter files directory (default)
 │   ├── authentication-service.md # Example files generated from monolithic context file
-├── CLAUDE.md                   # Table of Context's (table of contents)
-└── backup/                     # Original files (copies preserved during conversion)
-    └── CLAUDE.md
+│   ├── database-schema.md
+│   └── api-endpoints.md
+├── [AGENT].md                  # Index file (varies by template - see below)
+└── backup/                     # Original files (default backup location)
+    └── [source-file].md        # Your original file backed up here
+
+TIP: Use `--no-backup` during convert command to skip backup completely! 
+```
+
+**Index filenames by template:**
+- `claude` → `CLAUDE.md`
+- `cursor` → `AGENTS.md`
+- `copilot` → `copilot-instructions.md`  
+- `gemini` → `GEMINI.md`
+- `generic` → `template.md`
+
+### Custom Structure
+Using `--context-dir` and `--backup-dir` flags:
+```bash
+contindex convert --source=my-docs.md --context-dir=docs-context --backup-dir=backups --template=cursor
+```
+Results in:
+```
+your-project/
+├── docs-context/              # Custom chapter directory (--context-dir)
+│   ├── authentication-service.md
+│   ├── database-schema.md
+│   └── api-endpoints.md  
+├── AGENTS.md                  # Index file (cursor template)
+└── backups/                   # Custom backup directory (--backup-dir)
+    └── my-docs.md             # Original source file backed up
 ```
 
 ## Template Examples
