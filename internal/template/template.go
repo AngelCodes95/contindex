@@ -69,7 +69,7 @@ func (m *Manager) prepareTemplateData(projectConfig *config.ProjectConfig) (*Dat
 		ContextDir:       projectConfig.ContextDir,
 		Template:         projectConfig.Template,
 		GeneratedAt:      time.Now().Format("2006-01-02 15:04:05"),
-		ContindexVersion: "0.0.2", // This should match the version in root.go
+		ContindexVersion: "0.0.3", // This should match the version in root.go
 		ReferenceSyntax:  referenceSyntax,
 	}, nil
 }

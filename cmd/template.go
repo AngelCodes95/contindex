@@ -216,7 +216,7 @@ func generateTemplatePreview(info *contindexTemplate.Info) (string, error) {
 		},
 		Template:         info.Name,
 		GeneratedAt:      "2024-01-01 12:00:00",
-		ContindexVersion: "0.0.1",
+		ContindexVersion: "0.0.3",
 		ReferenceSyntax:  "@context/%s/",
 	}
 

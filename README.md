@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="docs/assets/logo.svg" alt="Contindex Logo" width="800">
+</div>
+
 # Contindex
 
 A lightweight CLI tool that transforms monolithic AI context files into an index-chapter architecture. 

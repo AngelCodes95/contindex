@@ -1,0 +1,120 @@
+<svg viewBox="0 0 1200 500" xmlns="http://www.w3.org/2000/svg">
+  <path fill="#0d1117" d="M0 0h1200v500H0z"/>
+  <text x="600" y="40" text-anchor="middle" fill="#58a6ff" font-family="monospace" font-size="24" font-weight="bold">
+    CONTINDEX: Monolithic Context → Index + Chapters
+  </text>
+  <rect x="80" y="80" width="300" height="320" fill="#21262d" stroke="#30363d" stroke-width="2" rx="8">
+    <animate attributeName="stroke" values="#30363d;#58a6ff;#30363d;#30363d;#30363d" dur="6s" repeatCount="indefinite"/>
+    <animate attributeName="stroke-width" values="2;4;2;2;2" dur="6s" repeatCount="indefinite"/>
+  </rect>
+  <text x="230" y="110" text-anchor="middle" fill="#f0f6fc" font-family="monospace" font-size="18" font-weight="bold">Claude.md</text>
+  <text x="230" y="135" text-anchor="middle" fill="#7d8590" font-family="monospace" font-size="14">(Monolithic)</text>
+  <rect x="100" y="160" width="260" height="40" fill="#8b949e" rx="6"/>
+  <text x="230" y="184" text-anchor="middle" font-family="monospace" font-size="12">Authentication + DB + API</text>
+  <rect x="100" y="210" width="260" height="40" fill="#8b949e" rx="6"/>
+  <text x="230" y="234" text-anchor="middle" font-family="monospace" font-size="12">Business Rules + Tests</text>
+  <rect x="100" y="260" width="260" height="40" fill="#8b949e" rx="6"/>
+  <text x="230" y="284" text-anchor="middle" font-family="monospace" font-size="12">Config + Deployment</text>
+  <rect x="100" y="310" width="260" height="40" fill="#8b949e" rx="6"/>
+  <text x="230" y="334" text-anchor="middle" font-family="monospace" font-size="12">Mixed Context</text>
+  <text x="230" y="370" text-anchor="middle" fill="#f85149" font-family="monospace" font-size="9">All context together in one file • Token Heavy</text>
+  <text x="230" y="385" text-anchor="middle" fill="#f85149" font-family="monospace" font-size="9">Harder for AI to Navigate as context grows</text>
+  <rect x="480" y="180" width="280" height="120" fill="#0d1117" stroke="#30363d" stroke-width="2" rx="6">
+    <animate attributeName="stroke" values="#30363d;#30363d;#58a6ff;#30363d;#30363d" dur="6s" repeatCount="indefinite"/>
+    <animate attributeName="stroke-width" values="2;2;4;2;2" dur="6s" repeatCount="indefinite"/>
+  </rect>
+  <rect x="480" y="180" width="280" height="25" fill="#21262d" rx="6"/>
+  <circle cx="495" cy="192" r="3" fill="#f85149"/>
+  <circle cx="510" cy="192" r="3" fill="#f1c40f"/>
+  <circle cx="525" cy="192" r="3" fill="#2ecc71"/>
+  <text x="495" y="225" fill="#7d8590" font-family="monospace" font-size="12">$ contindex convert </text>
+  <text x="510" y="245" fill="#7d8590" font-family="monospace" font-size="12">--source=CLAUDE.md</text>
+  <text x="495" y="270" fill="#58a6ff" font-family="monospace" font-size="11">✓ Analyzing content...</text>
+  <text x="495" y="285" fill="#40c463" font-family="monospace" font-size="11">✓ Creating semantic chapters...</text>
+  <path d="M380 240h100" stroke="#58a6ff" stroke-width="3" fill="none" marker-end="url(#arrowhead)">
+    <animate attributeName="stroke-width" values="3;3;6;3;3" dur="6s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.3;0.8;1;0.3;0.3" dur="6s" repeatCount="indefinite"/>
+  </path>
+  <path d="M760 240h90" stroke="#58a6ff" stroke-width="3" fill="none" marker-end="url(#arrowhead)">
+    <animate attributeName="stroke-width" values="3;3;3;6;3" dur="6s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.3;0.3;0.8;1;0.3" dur="6s" repeatCount="indefinite"/>
+  </path>
+  <rect x="850" y="80" width="300" height="130" fill="#21262d" stroke="#30363d" stroke-width="2" rx="8">
+    <animate attributeName="stroke" values="#30363d;#30363d;#30363d;#58a6ff;#30363d" dur="6s" repeatCount="indefinite"/>
+    <animate attributeName="stroke-width" values="2;2;2;4;2" dur="6s" repeatCount="indefinite"/>
+  </rect>
+  <text x="1000" y="110" text-anchor="middle" fill="#f0f6fc" font-family="monospace" font-size="18" font-weight="bold">
+      <animate attributeName="fill" values="#f0f6fc;#f0f6fc;#f0f6fc;#58a6ff;#f0f6fc" dur="6s" repeatCount="indefinite"/>
+
+
+
+      Claude.md
+    </text>
+  <text x="1000" y="135" text-anchor="middle" fill="#7d8590" font-family="monospace" font-size="14">
+      <animate attributeName="fill" values="#7d8590;#7d8590;#7d8590;#58a6ff;#7d8590" dur="6s" repeatCount="indefinite"/>
+
+
+
+      (Index - Table of Contents)
+    </text>
+  <text x="870" y="165" fill="#fd7e14" font-family="monospace" font-size="10">
+      <animate attributeName="fill" values="#fd7e14;#fd7e14;#fd7e14;#ff9f4a;#fd7e14" dur="6s" repeatCount="indefinite"/>
+
+
+
+      1. context/authentication-service.md
+    </text>
+  <text x="870" y="180" fill="#20c997" font-family="monospace" font-size="10">
+      <animate attributeName="fill" values="#20c997;#20c997;#20c997;#4dd4aa;#20c997" dur="6s" repeatCount="indefinite"/>
+
+
+
+      2. context/database-schema.md
+    </text>
+  <text x="870" y="195" fill="#6f42c1" font-family="monospace" font-size="10">
+      <animate attributeName="fill" values="#6f42c1;#6f42c1;#6f42c1;#8b5cf6;#6f42c1" dur="6s" repeatCount="indefinite"/>
+
+
+
+      3. context/api-endpoints.md
+    </text>
+  <text x="1050" y="205" text-anchor="middle" fill="#7d8590" font-family="monospace" font-size="11">... more chapters</text>
+  <rect x="850" y="230" width="300" height="45" fill="#fd7e14" rx="8" opacity=".9">
+    <animate attributeName="opacity" values="0.9;0.9;0.9;1;0.9" dur="6s" repeatCount="indefinite"/>
+    <animate attributeName="fill" values="#fd7e14;#fd7e14;#fd7e14;#ff9f4a;#fd7e14" dur="6s" repeatCount="indefinite"/>
+  </rect>
+  <text x="1000" y="257" text-anchor="middle" font-family="monospace" font-size="14" font-weight="bold">
+      <animate attributeName="fill" values="#000;#000;#000;#1a1a1a;#000" dur="6s" repeatCount="indefinite"/>
+
+
+
+      authentication-service.md
+    </text>
+  <rect x="850" y="285" width="300" height="45" fill="#20c997" rx="8" opacity=".9">
+    <animate attributeName="opacity" values="0.9;0.9;0.9;1;0.9" dur="6s" repeatCount="indefinite"/>
+    <animate attributeName="fill" values="#20c997;#20c997;#20c997;#4dd4aa;#20c997" dur="6s" repeatCount="indefinite"/>
+  </rect>
+  <text x="1000" y="312" text-anchor="middle" font-family="monospace" font-size="14" font-weight="bold">
+      <animate attributeName="fill" values="#000;#000;#000;#1a1a1a;#000" dur="6s" repeatCount="indefinite"/>
+
+
+
+      database-schema.md
+    </text>
+  <rect x="850" y="340" width="300" height="45" fill="#6f42c1" rx="8" opacity=".9">
+    <animate attributeName="opacity" values="0.9;0.9;0.9;1;0.9" dur="6s" repeatCount="indefinite"/>
+    <animate attributeName="fill" values="#6f42c1;#6f42c1;#6f42c1;#8b5cf6;#6f42c1" dur="6s" repeatCount="indefinite"/>
+  </rect>
+  <text x="1000" y="367" text-anchor="middle" fill="#fff" font-family="monospace" font-size="14" font-weight="bold">
+      <animate attributeName="fill" values="#fff;#fff;#fff;#e5e5e5;#fff" dur="6s" repeatCount="indefinite"/>
+
+
+
+      api-endpoints.md
+    </text>
+  <text x="1050" y="395" text-anchor="middle" fill="#7d8590" font-family="monospace" font-size="11">... more chapters</text>
+  <rect x="80" y="420" width="1070" height="60" fill="#161b22" stroke="#30363d" rx="8"/>
+  <text x="600" y="440" text-anchor="middle" fill="#7d8590" font-family="monospace" font-size="12">Install</text>
+  <text x="600" y="458" text-anchor="middle" fill="#58a6ff" font-family="monospace" font-size="14" font-weight="bold">go install github.com/angelcodes95/contindex@latest</text>
+  <text x="1005" y="410" text-anchor="middle" fill="#f85149" font-family="monospace" font-size="9">Agent reads index file only, gets necesssary chapters</text>
+</svg>
